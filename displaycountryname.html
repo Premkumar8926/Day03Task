@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Information</title>
+    <style>
+        .country-info {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Country Information</h1>
+    <div id="countries-container"></div>
+
+    <script>
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://restcountries.com/v3.1/all', true);
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const data = JSON.parse(xhr.responseText);
+                const container = document.getElementById('countries-container');
+
+                data.forEach(country => {
+                    const countryDiv = document.createElement('div');
+                    countryDiv.classList.add('country-info');
+
+                    const name = document.createElement('p');
+                    name.textContent = `Name: ${country.name.common}`;
+                    countryDiv.appendChild(name);
+
+                    const region = document.createElement('p');
+                    region.textContent = `Region: ${country.region}`;
+                    countryDiv.appendChild(region);
+
+                    const subregion = document.createElement('p');
+                    subregion.textContent = `Sub-region: ${country.subregion}`;
+                    countryDiv.appendChild(subregion);
+
+                    const population = document.createElement('p');
+                    population.textContent = `Population: ${country.population}`;
+                    countryDiv.appendChild(population);
+
+                    container.appendChild(countryDiv);
+                });
+            } else {
+                console.error('Error fetching country data:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Request failed');
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

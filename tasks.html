@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare JSON Objects</title>
+</head>
+<body>
+    <h1>Compare JSON Objects</h1>
+    <script>
+        // Function to sort object properties
+        function sortObjectProperties(obj) {
+            if (typeof obj !== 'object' || obj === null) {
+                return obj; // Return non-object types unchanged
+            }
+
+            if (Array.isArray(obj)) {
+                return obj.map(sortObjectProperties); // Recursively sort array elements
+            }
+
+            const sortedObj = {};
+            Object.keys(obj).sort().forEach(key => {
+                sortedObj[key] = sortObjectProperties(obj[key]);
+            });
+            return sortedObj;
+        }
+
+        // Function to compare two JSON objects
+        function compareJSON(obj1, obj2) {
+            const obj1Str = JSON.stringify(sortObjectProperties(obj1));
+            const obj2Str = JSON.stringify(sortObjectProperties(obj2));
+            return obj1Str === obj2Str;
+        }
+
+        // Define two JSON objects
+        var obj1 = {name: "Person 1", age: 5};
+        var obj2 = {age: 5, name: "Person 1"};
+
+        console.log('Comparing static objects:');
+        console.log('Objects are equal:', compareJSON(obj1, obj2));
+
+        // Fetch JSON objects using XMLHttpRequest and compare
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://example.com/api/endpoint', true);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+
+                // Assuming response has two objects to compare
+                var fetchedObj1 = response.obj1;
+                var fetchedObj2 = response.obj2;
+
+                console.log('Comparing fetched objects:');
+                // Compare the fetched objects
+                console.log('Objects are equal:', compareJSON(fetchedObj1, fetchedObj2));
+            } else if (xhr.readyState === 4) {
+                console.error('Error fetching data:', xhr.statusText);
+            }
+        };
+
+        xhr.send();
+    </script>
+</body>
+</html>

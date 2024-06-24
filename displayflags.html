@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Flags</title>
+</head>
+<body>
+    <h1>Country Flags</h1>
+    <div id="flags-container"></div>
+
+    <script>
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Configure it: GET-request for the URL
+        xhr.open('GET', 'https://restcountries.com/v3.1/all', true);
+
+        // Set up the onload callback
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                const flagsContainer = document.getElementById('flags-container');
+                data.forEach(country => {
+                    const img = document.createElement('img');
+                    img.src = country.flags.png;  // You can use .svg if you prefer
+                    img.alt = `Flag of ${country.name.common}`;
+                    img.style.width = '100px';  // Adjust size as needed
+                    img.style.margin = '5px';
+                    flagsContainer.appendChild(img);
+                });
+            } else {
+                console.error('Error fetching country data:', xhr.statusText);
+            }
+        };
+
+        // Set up the onerror callback
+        xhr.onerror = function() {
+            console.error('Request failed');
+        };
+
+        // Send the request
+        xhr.send();
+    </script>
+</body>
+</html>
+

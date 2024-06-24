@@ -1,0 +1,31 @@
+//How to compare two JSON have the same properties without order ?
+//a. var obj1 = {name: "Person 1", age:5};
+//b. var obj2 = {age:5, name:"Person 1"};
+
+
+function compareJSON(obj1, obj2) {
+    // Convert object to string with sorted properties
+    const obj1Str = JSON.stringify(sortObjectProperties(obj1));
+    const obj2Str = JSON.stringify(sortObjectProperties(obj2));
+
+    // Compare the resulting strings
+    return obj1Str === obj2Str;
+}
+
+function sortObjectProperties(obj) {
+    // Create a new object with sorted keys
+    return Object.keys(obj).sort().reduce((result, key) => {
+        result[key] = obj[key];
+        return result;
+    }, {});
+}
+
+var obj1 = {name: "Person 1", age: 5};
+var obj2 = {age: 5, name: "Person 1"};
+
+console.log(compareJSON(obj1, obj2));  // true
+
+
+Explanation:
+sortObjectProperties: This function takes an object, gets its keys, sorts them, and constructs a new object with the sorted keys.
+compareJSON: This function converts both objects into strings with sorted properties and compares these strings.
